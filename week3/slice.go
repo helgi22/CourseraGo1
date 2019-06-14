@@ -1,48 +1,34 @@
 package main
 
 import (
-	"bufio"
-	"bytes"
 	"fmt"
-	"os"
 	"sort"
 	"strconv"
+	"strings"
 )
 
 func main() {
-
-	var (
-		slice  []int
-		buffer bytes.Buffer
-	)
-
-	scanner := bufio.NewScanner(os.Stdin)
+	var slice []int
 
 	for {
-		fmt.Print("Please, enter the number >:")
-		scanner.Scan()
-		buffer.Reset()
+		var input string
 
-		buffer.Write(scanner.Bytes())
+		fmt.Printf("Enter yours number:")
+		_, _ = fmt.Scanln(&input)
 
-		switch i, err := strconv.Atoi(buffer.String()); {
-		case err == nil:
-			fmt.Printf("You entered the number [%d]\n", i)
-			slice = append(slice, i)
-		case buffer.String() == "X":
-			fmt.Println("You entered the character ‘X’ for quit the program!\nSo, Bye-bye...")
-			//Sorting and print slice
-			printResult(slice)
+		switch num, err := strconv.Atoi(input); {
+		case strings.ToUpper(input) == "X":
+			fmt.Printf("You entered the character ‘X’ for quit the program!\n"+
+				"Final result: Slise has len=%d, cap=%d and it include next elements: %v\n"+
+				"So, Bye-bye...", len(slice), cap(slice), slice)
 			return
+		case err == nil:
+			slice = append(slice, num)
+			sort.Ints(slice)
+			fmt.Printf("Slice include: %v\n", slice)
 		default:
-			fmt.Printf("Entered symbol [%s] is not int: %s\n", buffer.String(), err.Error())
+			fmt.Printf("Entered symbol [%s] is not int number: %s\n", input, err.Error())
 		}
+
 	}
-
-}
-
-func printResult(result []int) {
-	sort.Ints(result)
-	println("Printing entered result...")
-	fmt.Printf("The slice has len=%d, cap=%d and include next elements: %v\n", len(result), cap(result), result)
 }
